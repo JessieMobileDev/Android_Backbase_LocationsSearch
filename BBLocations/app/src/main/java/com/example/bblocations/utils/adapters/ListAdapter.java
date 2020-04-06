@@ -16,6 +16,7 @@ public class ListAdapter extends BaseAdapter {
     private static final long BASE_ID = 0x01011;
     private final Context context;
     private final List<City> cities;
+    private List<City> filteredCities;
 
     public ListAdapter(Context context, List<City> cities) {
         this.context = context;
@@ -42,6 +43,7 @@ public class ListAdapter extends BaseAdapter {
     public long getItemId(int position) {
         return BASE_ID + position;
     }
+
     static class ViewHolder {
         final TextView title;
         final TextView subtitle;

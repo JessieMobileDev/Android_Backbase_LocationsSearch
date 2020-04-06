@@ -1,6 +1,8 @@
 package com.example.bblocations.utils.views;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
@@ -12,49 +14,68 @@ import com.example.bblocations.utils.listeners.GenericListener;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-public class BBInputField extends ConstraintLayout implements EditText.OnEditorActionListener {
+public class BBInputField extends ConstraintLayout implements TextWatcher {
 
     protected EditText inputField;
     protected View divider;
     protected GenericListener listener;
 
-    public BBInputField(Context context, GenericListener listener) {
+    public BBInputField(Context context) {
         super(context);
-        initialize(null, listener);
+        if(!isInEditMode()) {
+            initialize(null);
+        }
     }
 
-    public BBInputField(Context context, AttributeSet attrs, GenericListener listener) {
+    public BBInputField(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initialize(attrs, listener);
+        if(!isInEditMode()) {
+            initialize(attrs);
+        }
     }
 
-    public BBInputField(Context context, AttributeSet attrs, int defStyleAttr, GenericListener listener) {
+    public BBInputField(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initialize(attrs, listener);
+        if(!isInEditMode()) {
+            initialize(attrs);
+        }
     }
 
     /**
      * Loads layout for UI element and bind views to class
      * @param attributeSet
      */
-    private void initialize(AttributeSet attributeSet, GenericListener listener) {
+    private void initialize(AttributeSet attributeSet) {
         inflate(getContext(), R.layout.bb_input_field, this);
-        bindViews(listener);
+        bindViews();
     }
 
     /**
      * Binds views to the class
      */
-    private void bindViews(GenericListener listener) {
+    private void bindViews() {
         this.inputField = findViewById(R.id.editText);
         this.divider = findViewById(R.id.divider);
+        this.inputField.addTextChangedListener(this);
+    }
+
+    public BBInputField withCallback(GenericListener listener) {
         this.listener = listener;
-        this.inputField.setOnEditorActionListener(this);
+        return this;
     }
 
     @Override
-    public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-        listener.searchListener(textView.getText(), i, keyEvent);
-        return false;
+    public void beforeTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+        listener.searchListener(charSequence, start, before, count);
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
     }
 }

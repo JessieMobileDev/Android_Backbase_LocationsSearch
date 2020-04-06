@@ -1,12 +1,11 @@
 package com.example.bblocations.utils;
 
 import android.content.Context;
-
 import com.example.bblocations.models.City;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -66,6 +65,27 @@ public class Utils {
             });
         }
         return tempList;
+    }
+
+    /**
+     * Filter a list based on given text.
+     * @param originalList
+     * @param text
+     * @return
+     */
+    public static List<City> getFilteredList(List<City> originalList, CharSequence text) {
+        List<City> filteredList;
+        if(Utils.isNull(text) || text.length() == 0) {
+            return originalList;
+        } else {
+            filteredList = new ArrayList<>();
+            for (City city: originalList) {
+                if(city.getName().startsWith(text.toString()))  {
+                    filteredList.add(city);
+                }
+            }
+        }
+        return filteredList.size() == 0 ? originalList : filteredList;
     }
 
     /**

@@ -17,6 +17,7 @@
         android:importantForAccessibility="yes"
         android:importantForAutofill="no"
         android:inputType="text"
+        android:imeOptions="actionSearch"
         android:drawableStart="@drawable/ic_search_black_24dp"
         android:drawablePadding="5dp"
         app:layout_constraintTop_toTopOf="parent"
