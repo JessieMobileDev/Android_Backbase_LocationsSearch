@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">BBLocations</string>
+
+    <string name="bbInputFields_hint">e.g. Sydney, AU</string>
 </resources>
