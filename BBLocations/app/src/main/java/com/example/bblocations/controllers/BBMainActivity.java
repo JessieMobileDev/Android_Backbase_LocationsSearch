@@ -8,6 +8,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
+import android.view.MenuItem;
 
 import com.example.bblocations.R;
 import com.example.bblocations.models.City;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -37,7 +40,6 @@ public class BBMainActivity extends BBActivity implements MapInterface {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
     }
 
     @Override
@@ -72,11 +74,16 @@ public class BBMainActivity extends BBActivity implements MapInterface {
         if(currentFragmentID.equals(BBMainFragment.FRAGMENT_ID)) {
             requestLocation();
         }
+
+        if(currentFragmentID.equals(BBMapFragment.FRAGMENT_ID) && Utils.isPhoneInPortraitMode(getBaseContext())) {
+            setBackButtonToActionBar(true);
+        }
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        setBackButtonToActionBar(false);
         currentFragmentID = BBMainFragment.FRAGMENT_ID;
         requestLocation();
     }
@@ -131,5 +138,12 @@ public class BBMainActivity extends BBActivity implements MapInterface {
         currentFragmentID = BBMapFragment.FRAGMENT_ID;
         getSupportFragmentManager().beginTransaction().addToBackStack(null).add(R.id.mainActivity,
                 BBMapFragment.newInstance().withSelectedCity(selectedCity)).commit();
+        setBackButtonToActionBar(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        onBackPressed();
+        return super.onOptionsItemSelected(item);
     }
 }
