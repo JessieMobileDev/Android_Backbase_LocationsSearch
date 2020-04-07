@@ -30,6 +30,13 @@ public class City implements Serializable {
         return coord;
     }
 
+    public City(String country, String name, Integer id, Coordinates coord) {
+        this.country = country;
+        this.name = name;
+        this.id = id;
+        this.coord = coord;
+    }
+
     public static class Coordinates implements Serializable {
         @SerializedName("lon")
         private Float lon;
@@ -42,6 +49,11 @@ public class City implements Serializable {
 
         public Float getLat() {
             return lat;
+        }
+
+        public Coordinates(Float lon, Float lat) {
+            this.lon = lon;
+            this.lat = lat;
         }
     }
 }

@@ -24,8 +24,9 @@
             android:value="@integer/google_play_services_version"/>
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBF5Rjx6y-l4-46Pi0hxFkwQNp_9mmts5Q"/>
-
-        <activity android:name=".controllers.BBMainActivity"
+<!-- Following line is still here for doing the instrumental tests -->
+<!--        <activity android:name="com.example.about.AboutActivity"-->
+            <activity android:name=".controllers.BBMainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

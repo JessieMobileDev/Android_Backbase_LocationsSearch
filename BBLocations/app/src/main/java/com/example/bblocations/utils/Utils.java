@@ -96,7 +96,7 @@ public class Utils {
         } else {
             filteredList = new ArrayList<>();
             for (City city: originalList) {
-                if(city.getName().startsWith(text.toString()))  {
+                if(city.getName().toLowerCase().startsWith(text.toString().toLowerCase()))  {
                     filteredList.add(city);
                 }
             }
