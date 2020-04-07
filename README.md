@@ -13,4 +13,7 @@ Backbase assignment involving locations and search.
 - **Saved list for reuse:** Parsing the cities.json list takes about 2 seconds, very long for a user to keep seeing over and over. For that matter, I decided to save the list in the instance state bundle so that it could be reused again without the need of getting parsed again.
 
 ### Challenges:
-- **Saving other info:** Unfortunatelly I could not get to save information to display again when orientation changed. Information such as: search text and location on map. I tried a couple of approaches, and I noticed I spent a lot of time on that one thing. Decided that I could come back on a later time to polish it.
+- **Saving other info:** Unfortunatelly I could not get to save information to display again when orientation changed. Information such as: search text and location on map. I tried a couple of approaches, and I noticed I spent a lot of time on that one thing. Decided that I could come back at a later time to polish it.
+
+### Final thoughts:
+This was a great refresher for me. There were things that I used a lot in the past but not so much lately, and I got to research again and understand how things work again. I'm grateful to have had this opportunity.
