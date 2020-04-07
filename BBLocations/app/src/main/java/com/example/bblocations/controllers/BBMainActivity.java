@@ -7,11 +7,13 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.util.Log;
+import android.view.MenuItem;
 
 import com.example.bblocations.R;
 import com.example.bblocations.models.City;
 import com.example.bblocations.utils.Utils;
+import com.example.bblocations.utils.listeners.InfoButtonListener;
 import com.example.bblocations.utils.listeners.MapInterface;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -24,7 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-public class BBMainActivity extends BBActivity implements MapInterface {
+public class BBMainActivity extends BBActivity implements MapInterface, InfoButtonListener {
 
     private ArrayList<City> allCities = new ArrayList<>();
     private boolean hasParsed = false;
@@ -37,7 +39,6 @@ public class BBMainActivity extends BBActivity implements MapInterface {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
     }
 
     @Override
@@ -72,11 +73,17 @@ public class BBMainActivity extends BBActivity implements MapInterface {
         if(currentFragmentID.equals(BBMainFragment.FRAGMENT_ID)) {
             requestLocation();
         }
+
+        if(currentFragmentID.equals(BBMapFragment.FRAGMENT_ID) && Utils.isPhoneInPortraitMode(getBaseContext()) ||
+           currentFragmentID.equals(BBCityInfoFragment.FRAGMENT_ID) && Utils.isPhoneInPortraitMode(getBaseContext())) {
+            setBackButtonToActionBar(true);
+        }
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        setBackButtonToActionBar(false);
         currentFragmentID = BBMainFragment.FRAGMENT_ID;
         requestLocation();
     }
@@ -131,5 +138,24 @@ public class BBMainActivity extends BBActivity implements MapInterface {
         currentFragmentID = BBMapFragment.FRAGMENT_ID;
         getSupportFragmentManager().beginTransaction().addToBackStack(null).add(R.id.mainActivity,
                 BBMapFragment.newInstance().withSelectedCity(selectedCity)).commit();
+        setBackButtonToActionBar(true);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        onBackPressed();
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void openInfoScreen(City selectedCity) {
+        Log.d("xx1", "openInfoScreen: button clicked");
+        getSupportFragmentManager().beginTransaction().addToBackStack(null).add(R.id.mainActivity,
+                BBCityInfoFragment.newInstance()
+                        .withSelectedCity(selectedCity))
+                        .commit();
+        setBackButtonToActionBar(true);
+    }
+
+
 }

@@ -12,6 +12,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Filter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+
 import com.example.bblocations.R;
 import com.example.bblocations.models.City;
 import com.example.bblocations.utils.Utils;
@@ -33,8 +35,9 @@ import java.util.Collections;
 import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
-public class BBMainFragment extends BBFragment implements GenericListener, OnMapReadyCallback, AdapterView.OnItemClickListener {
+public class BBMainFragment extends Fragment implements GenericListener, OnMapReadyCallback, AdapterView.OnItemClickListener {
 
     private BBInputField searchField;
     private MapView mapView;
@@ -46,6 +49,7 @@ public class BBMainFragment extends BBFragment implements GenericListener, OnMap
     private Double currentLat;
     private Double currentLon;
     private MapInterface listener;
+    private ProgressBar progressBar;
 
     public static final String FRAGMENT_ID = "BBMainFragment";
     private static final String SEARCH_TEXT_BUNDLE = "SEARCH_TEXT_BUNDLE";
@@ -100,6 +104,7 @@ public class BBMainFragment extends BBFragment implements GenericListener, OnMap
         if (!Utils.isNull(getView())) {
             this.searchField = getView().findViewById(R.id.searchField);
             this.listView = getView().findViewById(R.id.searchListView);
+            this.progressBar = getView().findViewById(R.id.progressBar);
             this.searchField.withCallback(this);
             this.listView.setOnItemClickListener(this);
             if (!Utils.isNull(savedInstanceState)) {

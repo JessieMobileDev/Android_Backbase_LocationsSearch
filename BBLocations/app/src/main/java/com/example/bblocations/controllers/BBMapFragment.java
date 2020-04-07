@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.example.bblocations.R;
 import com.example.bblocations.models.City;
 import com.example.bblocations.utils.Utils;
@@ -14,13 +13,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
-public class BBMapFragment extends BBFragment implements OnMapReadyCallback {
+public class BBMapFragment extends Fragment implements OnMapReadyCallback {
 
     private MapView mapView;
     private GoogleMap googleMap;
