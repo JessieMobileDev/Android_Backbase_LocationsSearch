@@ -9,6 +9,12 @@ import android.util.Log;
 import com.example.bblocations.models.City;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -132,5 +138,35 @@ public class Utils {
             Log.e("xx1", "isGoogleServicesAvailable: you cannot make map requests");
         }
         return false;
+    }
+
+    /**
+     * Creates a mark and drops on the map.
+     * @param googleMap
+     * @param selectedCity
+     */
+    public static void createMarker(GoogleMap googleMap, City selectedCity) {
+        if(Utils.isNull(googleMap)) {
+            return;
+        }
+
+        MarkerOptions options = new MarkerOptions();
+        options.title(selectedCity.getName() + " - " + selectedCity.getCountry());
+        options.snippet("Latitude: " + selectedCity.getCoord().getLat() + " - Longitude: " + selectedCity.getCoord().getLon());
+        LatLng pinPointedLocation = new LatLng(selectedCity.getCoord().getLat(), selectedCity.getCoord().getLon());
+        options.position(pinPointedLocation);
+        Marker marker = googleMap.addMarker(options);
+        marker.setTag(selectedCity);
+    }
+
+    /**
+     * Zooms in the selected location.
+     * @param googleMap
+     * @param selectedCity
+     */
+    public static void setLocationAndZoomIn(GoogleMap googleMap,City selectedCity) {
+        LatLng placeLocation = new LatLng(selectedCity.getCoord().getLat(), selectedCity.getCoord().getLon());
+        CameraUpdate cameraMovement = CameraUpdateFactory.newLatLngZoom(placeLocation, 16);
+        googleMap.animateCamera(cameraMovement);
     }
 }
