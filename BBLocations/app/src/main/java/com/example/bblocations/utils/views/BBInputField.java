@@ -78,4 +78,16 @@ public class BBInputField extends ConstraintLayout implements TextWatcher {
     public void afterTextChanged(Editable editable) {
 
     }
+
+    public EditText getEditText() {
+        return this.inputField;
+    }
+
+    public void setText(String text) {
+        this.inputField.setText(text);
+    }
+
+    public String getText() {
+        return this.inputField.getText().toString();
+    }
 }

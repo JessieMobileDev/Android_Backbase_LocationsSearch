@@ -25,7 +25,8 @@
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBF5Rjx6y-l4-46Pi0hxFkwQNp_9mmts5Q"/>
 
-        <activity android:name=".controllers.BBMainActivity">
+        <activity android:name=".controllers.BBMainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
