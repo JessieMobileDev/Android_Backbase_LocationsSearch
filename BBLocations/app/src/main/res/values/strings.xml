@@ -2,4 +2,7 @@
     <string name="app_name">BBLocations</string>
 
     <string name="bbInputFields_hint">e.g. Sydney, AU</string>
+    <string name="noConnection_title">Connection</string>
+    <string name="noConnection_message">This device does not have connection. Please, connect to the internet and try again.</string>
+    <string name="noConnection_posBtn">OK</string>
 </resources>

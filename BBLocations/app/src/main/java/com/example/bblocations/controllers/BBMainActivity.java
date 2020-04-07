@@ -1,6 +1,8 @@
 package com.example.bblocations.controllers;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Location;
@@ -12,6 +14,7 @@ import android.view.MenuItem;
 
 import com.example.bblocations.R;
 import com.example.bblocations.models.City;
+import com.example.bblocations.utils.ConnectionHandler;
 import com.example.bblocations.utils.Utils;
 import com.example.bblocations.utils.listeners.InfoButtonListener;
 import com.example.bblocations.utils.listeners.MapInterface;
@@ -44,9 +47,21 @@ public class BBMainActivity extends BBActivity implements MapInterface, InfoButt
     @Override
     protected void onResume() {
         super.onResume();
-        if(!hasParsed) {
-            getPlacesList();
-            requestLocation();
+        if(ConnectionHandler.isConnected(getBaseContext())) {
+            if (!hasParsed) {
+                getPlacesList();
+                requestLocation();
+            }
+        } else {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(BBMainActivity.this).setTitle(R.string.noConnection_title)
+                    .setMessage(R.string.noConnection_message)
+                    .setPositiveButton(R.string.noConnection_posBtn, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finishAndRemoveTask();
+                        }
+                    });
+            dialog.show();
         }
     }
 
