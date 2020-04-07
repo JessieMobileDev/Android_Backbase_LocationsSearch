@@ -12,6 +12,7 @@ import android.os.Parcelable;
 import com.example.bblocations.R;
 import com.example.bblocations.models.City;
 import com.example.bblocations.utils.Utils;
+import com.example.bblocations.utils.listeners.MapInterface;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -23,10 +24,11 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-public class BBMainActivity extends BBActivity {
+public class BBMainActivity extends BBActivity implements MapInterface {
 
     private ArrayList<City> allCities = new ArrayList<>();
     private boolean hasParsed = false;
+    private String currentFragmentID = "";
     private static final int REQUEST_LOCATION_PERMISSION = 0x01101;
     private static final String SAVED_INSTANCE_BUNDLE = "SAVED_INSTANCE_BUNDLE";
     private static final String HAS_PARSED = "HAS_PARSED";
@@ -49,9 +51,8 @@ public class BBMainActivity extends BBActivity {
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(SAVED_INSTANCE_BUNDLE, allCities);
-        bundle.putBoolean(HAS_PARSED, hasParsed);
+        outState.putSerializable(SAVED_INSTANCE_BUNDLE, allCities);
+        outState.putBoolean(HAS_PARSED, hasParsed);
         super.onSaveInstanceState(outState);
     }
 
@@ -68,13 +69,16 @@ public class BBMainActivity extends BBActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-
-        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-
-
+        if(currentFragmentID.equals(BBMainFragment.FRAGMENT_ID)) {
+            requestLocation();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        currentFragmentID = BBMainFragment.FRAGMENT_ID;
+        requestLocation();
     }
 
     private void getPlacesList() {
@@ -101,6 +105,7 @@ public class BBMainActivity extends BBActivity {
                 currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 double currentLat = currentLocation.getLatitude();
                 double currentLon = currentLocation.getLongitude();
+                currentFragmentID = BBMainFragment.FRAGMENT_ID;
                 getSupportFragmentManager().beginTransaction().replace(R.id.mainActivity,
                         BBMainFragment.newInstance()
                         .withCurrentLatLng(currentLat, currentLon)
@@ -119,5 +124,12 @@ public class BBMainActivity extends BBActivity {
         if(requestCode == REQUEST_LOCATION_PERMISSION) {
             requestLocation();
         }
+    }
+
+    @Override
+    public void openMapFragment(City selectedCity) {
+        currentFragmentID = BBMapFragment.FRAGMENT_ID;
+        getSupportFragmentManager().beginTransaction().addToBackStack(null).add(R.id.mainActivity,
+                BBMapFragment.newInstance().withSelectedCity(selectedCity)).commit();
     }
 }

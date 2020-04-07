@@ -1,6 +1,7 @@
 package com.example.bblocations.controllers;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.Filter;
 import android.widget.ListView;
 import com.example.bblocations.R;
@@ -15,6 +17,7 @@ import com.example.bblocations.models.City;
 import com.example.bblocations.utils.Utils;
 import com.example.bblocations.utils.adapters.ListAdapter;
 import com.example.bblocations.utils.listeners.GenericListener;
+import com.example.bblocations.utils.listeners.MapInterface;
 import com.example.bblocations.utils.views.BBInputField;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -31,18 +34,21 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class BBMainFragment extends BBFragment implements GenericListener, OnMapReadyCallback {
+public class BBMainFragment extends BBFragment implements GenericListener, OnMapReadyCallback, AdapterView.OnItemClickListener {
 
     private BBInputField searchField;
     private MapView mapView;
     private GoogleMap googleMap;
     private ListView listView;
-    private ArrayList<City> allCities;
-    private ArrayList<City> filteredList;
+    private ArrayList<City> allCities = new ArrayList<>();
+    private ArrayList<City> filteredList = new ArrayList<>();
     private ListAdapter adapter;
     private Double currentLat;
     private Double currentLon;
+    private MapInterface listener;
 
+    public static final String FRAGMENT_ID = "BBMainFragment";
+    private static final String SEARCH_TEXT_BUNDLE = "SEARCH_TEXT_BUNDLE";
     private static final String TAG = "BBMainFragment";
 
     public static BBMainFragment newInstance() {
@@ -50,6 +56,14 @@ public class BBMainFragment extends BBFragment implements GenericListener, OnMap
         BBMainFragment fragment = new BBMainFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof MapInterface) {
+            listener = (MapInterface)context;
+        }
     }
 
     @Nullable
@@ -61,17 +75,17 @@ public class BBMainFragment extends BBFragment implements GenericListener, OnMap
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString(SEARCH_TEXT_BUNDLE, searchField.getText());
         super.onSaveInstanceState(outState);
     }
 
     @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -79,14 +93,6 @@ public class BBMainFragment extends BBFragment implements GenericListener, OnMap
         super.onActivityCreated(savedInstanceState);
 
         instantiateViews(savedInstanceState);
-
-//        /**
-//         * Parsing the whole cities.json file as City type. Sorting the list by name.
-//         */
-//        Type type = new TypeToken<List<City>>() {}.getType();
-//        String citiesJson = Utils.getJSONString(getContext(), R.raw.cities);
-//        allCities = new Gson().fromJson(citiesJson, type);
-//        allCities = Utils.sortListBy(Utils.SortType.NAME, allCities);
         populateAdapter(getContext(), allCities);
     }
 
@@ -95,6 +101,10 @@ public class BBMainFragment extends BBFragment implements GenericListener, OnMap
             this.searchField = getView().findViewById(R.id.searchField);
             this.listView = getView().findViewById(R.id.searchListView);
             this.searchField.withCallback(this);
+            this.listView.setOnItemClickListener(this);
+            if (!Utils.isNull(savedInstanceState)) {
+                this.searchField.setText(savedInstanceState.getString(SEARCH_TEXT_BUNDLE));
+            }
 
             if(Utils.isGoogleServicesAvailable(getActivity()) && !Utils.isPhoneInPortraitMode(getContext())) {
                 this.mapView = getView().findViewById(R.id.map);
@@ -151,5 +161,16 @@ public class BBMainFragment extends BBFragment implements GenericListener, OnMap
     public BBMainFragment withList(ArrayList<City> list) {
         this.allCities = list;
         return this;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        City city = filteredList.size() == 0 ? allCities.get(position) : filteredList.get(position);
+        if(Utils.isPhoneInPortraitMode(getContext())) {
+            listener.openMapFragment(city);
+        } else {
+            Utils.setLocationAndZoomIn(googleMap, city);
+            Utils.createMarker(googleMap, city);
+        }
     }
 }

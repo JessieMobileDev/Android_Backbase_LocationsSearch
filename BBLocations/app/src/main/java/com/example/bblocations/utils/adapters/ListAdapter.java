@@ -71,7 +71,7 @@ public class ListAdapter extends BaseAdapter {
         Float cityLon = ((City)getItem(position)).getCoord().getLon();
         if (!Utils.isNull(cityName) && !Utils.isNull(country) && !Utils.isNull(cityLat) && !Utils.isNull(cityLon)) {
             final String cityTitle = cityName + " - " + country;
-            final String cityCoord = cityLat + " - " + cityLon;
+            final String cityCoord = "Latitude: " + cityLat + " | Longitude: " + cityLon;
             mViewHolder.title.setText(cityTitle);
             mViewHolder.subtitle.setText(cityCoord);
         }
