@@ -8,7 +8,7 @@ Backbase assignment involving locations and search.
 
 - **Permissions:** The user should be able to tell the application if they want to share their location or not. Just like any other sort of permission. The user is prompted with an alert that ask them for permissions.
 
-- **Map Markers:** Even though it wasn't required, I thought it was necessary to add markers on the map so that the user understand that he got feedback from them clicking on the list.
+- **Map Markers:** Even though it wasn't required, I thought it was necessary to add markers on the map so that the user understand that he got feedback from them clicking on the list. They can also tap on the marker and see further details right there without having to tap on the "info icon" on the list.
 
 - **Saved list for reuse:** Parsing the cities.json list takes about 2 seconds, very long for a user to keep seeing over and over. For that matter, I decided to save the list in the instance state bundle so that it could be reused again without the need of getting parsed again.
 
