@@ -1,7 +1,15 @@
 package com.example.bblocations.utils;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.util.Log;
+
 import com.example.bblocations.models.City;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -10,6 +18,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+
+import androidx.core.app.ActivityCompat;
 
 public class Utils {
 
@@ -51,8 +61,8 @@ public class Utils {
      * @param list list of City objects to be sorted
      * @return the same List<City> but sorted in the way chosen
      */
-    public static List<City> sortListBy(final SortType type, List<City> list) {
-        List<City> tempList = list;
+    public static ArrayList<City> sortListBy(final SortType type, ArrayList<City> list) {
+        ArrayList<City> tempList = list;
         if(!Utils.isNull(tempList)) {
             Collections.sort(tempList, new Comparator<City>() {
                 @Override
@@ -73,8 +83,8 @@ public class Utils {
      * @param text
      * @return
      */
-    public static List<City> getFilteredList(List<City> originalList, CharSequence text) {
-        List<City> filteredList;
+    public static ArrayList<City> getFilteredList(ArrayList<City> originalList, CharSequence text) {
+        ArrayList<City> filteredList;
         if(Utils.isNull(text) || text.length() == 0) {
             return originalList;
         } else {
@@ -94,5 +104,33 @@ public class Utils {
     public enum SortType {
         NAME,
         COUNTRY
+    }
+
+    /**
+     * Checks the current orientation of the phone.
+     * @param context
+     * @return
+     */
+    public static boolean isPhoneInPortraitMode(Context context) {
+        int orientation = context.getResources().getConfiguration().orientation;
+        return orientation == Configuration.ORIENTATION_PORTRAIT;
+    }
+
+    /**
+     * Checks if phone has google services available.
+     * @param activity
+     * @return
+     */
+    public static boolean isGoogleServicesAvailable(Activity activity) {
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(activity);
+        if(available == ConnectionResult.SUCCESS) {
+            return true;
+        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(activity, available, 9001);
+            dialog.show();
+        } else {
+            Log.e("xx1", "isGoogleServicesAvailable: you cannot make map requests");
+        }
+        return false;
     }
 }
