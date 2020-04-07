@@ -1,7 +1,7 @@
 # Android_Backbase_LocationsSearch
 Backbase assignment involving locations and search.
 
-### Decisions take along the development of this app
+### Decisions taken along the development of this app
 - **Converting the json file:** I personally love using the library Gson, it's quick and literally a one liner when converting. I decided this was the best option to go with. I converted the json file into a string, which I fed into Gson function to convert into a list of my custom object.
 
 - **Connection handler:** One of the features of this app is to be able to view the location on the map, and that can't be done without internet connection. I made sure that the phone had connection before doing any further actions.
